@@ -1,0 +1,29 @@
+---
+// Hero section — the first thing visitors see.
+const heading = "A clear, benefit-driven headline goes here";
+const subheading =
+    "Follow it with a sentence or two that explains what you offer and why it matters to your visitor.";
+---
+
+<section class="mx-auto max-w-7xl px-6 py-24 text-center md:py-32">
+    <h1 class="font-heading text-4xl font-bold text-primary md:text-6xl">
+        {heading}
+    </h1>
+    <p class="mx-auto mt-6 max-w-2xl font-body text-lg text-secondary">
+        {subheading}
+    </p>
+    <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a
+            href="/#contact"
+            class="rounded-md bg-primary px-6 py-3 font-body text-sm text-background shadow-md transition-opacity hover:opacity-muted"
+        >
+            Get Started
+        </a>
+        <a
+            href="/#services"
+            class="rounded-md border border-tertiary px-6 py-3 font-body text-sm text-primary transition-opacity hover:opacity-muted"
+        >
+            Learn More
+        </a>
+    </div>
+</section>
