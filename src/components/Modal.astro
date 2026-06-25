@@ -1,0 +1,141 @@
+---
+interface Props {
+  /** Unique id for the dialog; any string works (hyphens included). */
+  id: string;
+  /** Optional heading shown in the modal header. */
+  title?: string;
+  /** Show the close (x) button in the header. */
+  showCloseButton?: boolean;
+  /** Close the modal when the backdrop is clicked. */
+  closeOnOutsideClick?: boolean;
+  /** Classes for the trigger button that opens the modal. */
+  openBtnClass?: string;
+}
+
+const {
+  id,
+  title,
+  showCloseButton = true,
+  closeOnOutsideClick = true,
+  openBtnClass,
+} = Astro.props;
+---
+
+<button type="button" data-modal-open={id} class={openBtnClass} aria-haspopup="dialog">
+  <slot name="open-button-content" />
+</button>
+
+<dialog
+  id={id}
+  data-close-on-outside={closeOnOutsideClick ? "" : undefined}
+  aria-labelledby={title ? `${id}-title` : undefined}
+>
+  <header>
+    {title && (
+      <span id={`${id}-title`} class="inline-block w-full text-xl font-semibold">
+        {title}
+      </span>
+    )}
+    {showCloseButton && (
+      <button
+        type="button"
+        data-modal-close
+        aria-label="Close"
+        class="absolute right-6 top-4 z-50 text-xl leading-none"
+      >
+        &times;
+      </button>
+    )}
+  </header>
+  <div class="body w-full">
+    <slot name="main" />
+  </div>
+</dialog>
+
+<script>
+  // Generic wiring for every <Modal /> on the page. Astro bundles this once,
+  // so a single delegated listener drives all modal instances.
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    // Open: any element marked with data-modal-open="<dialog id>"
+    const opener = target.closest<HTMLElement>("[data-modal-open]");
+    if (opener) {
+      const dialog = document.getElementById(opener.dataset.modalOpen ?? "");
+      if (dialog instanceof HTMLDialogElement) dialog.showModal();
+      return;
+    }
+
+    // Close: any element marked with data-modal-close inside the dialog
+    if (target.closest("[data-modal-close]")) {
+      target.closest("dialog")?.close();
+      return;
+    }
+
+    // Backdrop click: the click lands on the <dialog> itself because all
+    // content lives in padded children (header/.body), never the dialog box.
+    if (target instanceof HTMLDialogElement && target.hasAttribute("data-close-on-outside")) {
+      target.close();
+    }
+  });
+</script>
+
+<style>
+  @reference "../styles/global.css";
+
+  dialog {
+    @apply fixed rounded-md shadow-lg;
+    inset: 0;
+    margin: auto;
+    min-width: 20rem;
+    min-height: 10rem;
+    text-align: start;
+    opacity: 0;
+    translate: 0 25vh;
+    transition-property: overlay display opacity;
+    transition-duration: 0.25s;
+    transition-behavior: allow-discrete;
+
+    & header {
+      @apply relative z-50 flex items-center justify-between p-6;
+    }
+
+    & .body {
+      @apply w-full p-6;
+    }
+  }
+
+  dialog[open] {
+    opacity: 1;
+    translate: 0 0;
+
+    @starting-style {
+      translate: 0 -25vh;
+      opacity: 0;
+    }
+  }
+
+  dialog::backdrop {
+    opacity: 0;
+    transition-property: overlay display opacity;
+    transition-duration: 0.35s;
+    transition-behavior: allow-discrete;
+    @apply bg-background/70;
+  }
+
+  dialog[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
+  dialog::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
+</style>

@@ -27,6 +27,14 @@
     --blur-md: 12px;
     --blur-lg: 24px;
 
+    /* Border radius — reset the namespace, expose only approved radii
+       (rounded-none and rounded-full remain available as static utilities) */
+    --radius-*: initial;
+
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+
     --opacity-muted: 0.6;
     --opacity-disabled: 0.4;
     --opacity-overlay: 0.8;
