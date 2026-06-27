@@ -57,10 +57,21 @@ const { title = "Landing Page" } = Astro.props;
 </script>
 
 <style is:global>
+	@reference "../styles/global.css";
 	html,
 	body {
 		margin: 0;
 		width: 100%;
 		height: 100%;
+	}
+	
+	/* Page gutter + max width in one place. Full-width bands (each <section>,
+	   and each direct <div> band of the footer) keep backgrounds/borders
+	   bleeding edge-to-edge, while their single wrapper child is the constrained
+	   container — so a band should have exactly one direct content child. */
+	body > main > section > :first-child,
+	body > header > nav,
+	body > footer > div > :first-child {
+		@apply mx-auto max-w-7xl px-6;
 	}
 </style>
