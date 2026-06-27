@@ -1,5 +1,7 @@
 ---
 // Services section — what you offer, as a grid of cards.
+import RevealStagger from "@components/RevealStagger.astro";
+import Reveal from "@components/Reveal.astro";
 const heading = "Our Services";
 const subheading = "A short line introducing the range of what you provide.";
 
@@ -20,20 +22,24 @@ const services = [
             "Describe the service and the problem it solves for your customer in a sentence or two.",
     },
 ];
+
+// Stagger delays for the sequential card reveal (literal classes so Tailwind
+// detects them).
+const delays = ["animate-delay-0", "animate-delay-150", "animate-delay-300"];
 ---
 
 <section id="services" class="scroll-mt-20 border-t border-tertiary bg-background">
     <div class="mx-auto max-w-7xl px-6 py-20">
-        <div class="mx-auto max-w-2xl text-center">
+        <Reveal class="mx-auto max-w-2xl animate-fade-up text-center">
             <h2 class="font-heading text-3xl font-bold text-primary md:text-4xl">
                 {heading}
             </h2>
             <p class="mt-4 font-body text-base text-secondary">{subheading}</p>
-        </div>
-        <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+        </Reveal>
+        <RevealStagger class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
             {
-                services.map((service) => (
-                    <article class="rounded-lg border border-tertiary p-8 shadow-sm transition-shadow hover:shadow-md">
+                services.map((service, i) => (
+                    <article class={`animate-fade-up rounded-lg border border-tertiary p-8 shadow-sm transition-shadow hover:shadow-md`}>
                         <h3 class="font-heading text-xl font-bold text-primary">
                             {service.title}
                         </h3>
@@ -43,6 +49,6 @@ const services = [
                     </article>
                 ))
             }
-        </div>
+        </RevealStagger>
     </div>
 </section>

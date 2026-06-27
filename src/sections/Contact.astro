@@ -1,12 +1,13 @@
 ---
 // Contact section — a simple lead-capture form.
 // Wire `action` to your form handler / endpoint when ready.
+import Reveal from "@components/Reveal.astro";
 const heading = "Get in Touch";
 const subheading = "Tell us about your project and we'll get back to you shortly.";
 ---
 
 <section id="contact" class="scroll-mt-20 border-t border-tertiary bg-background">
-    <div class="mx-auto max-w-2xl px-6 py-20">
+    <Reveal class="mx-auto max-w-2xl animate-fade-up px-6 py-20">
         <div class="text-center">
             <h2 class="font-heading text-3xl font-bold text-primary md:text-4xl">
                 {heading}
@@ -54,5 +55,5 @@ const subheading = "Tell us about your project and we'll get back to you shortly
                 Send Message
             </button>
         </form>
-    </div>
+    </Reveal>
 </section>

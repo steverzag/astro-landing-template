@@ -1,5 +1,8 @@
 ---
 // About section — who you are and what you stand for.
+import Reveal from "@components/Reveal.astro";
+import RevealStagger from "@components/RevealStagger.astro";
+
 const heading = "About Us";
 const body =
     "Use this space to tell your story. Explain your mission, what makes you different, and why visitors should trust you. Keep it concise and focused on the value you bring.";
@@ -14,16 +17,16 @@ const stats = [
 <section id="about" class="scroll-mt-20 bg-background">
     <div class="mx-auto max-w-7xl px-6 py-20">
         <div class="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
-            <div>
+            <Reveal class="animate-fade-right animate-duration-700">
                 <h2 class="font-heading text-3xl font-bold text-primary md:text-4xl">
                     {heading}
                 </h2>
                 <p class="mt-6 font-body text-base text-secondary">{body}</p>
-            </div>
-            <dl class="grid grid-cols-3 gap-6">
+            </Reveal>
+            <RevealStagger class="grid grid-cols-3 gap-6">
                 {
                     stats.map((stat) => (
-                        <div class="rounded-lg border border-tertiary p-6 text-center shadow-sm">
+                        <div class="animate-fade-up rounded-lg border border-tertiary p-6 text-center shadow-sm">
                             <dt class="font-heading text-3xl font-bold text-primary">
                                 {stat.value}
                             </dt>
@@ -33,7 +36,7 @@ const stats = [
                         </div>
                     ))
                 }
-            </dl>
+            </RevealStagger>
         </div>
     </div>
 </section>

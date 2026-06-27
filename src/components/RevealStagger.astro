@@ -1,0 +1,19 @@
+---
+
+const renderedContent = await Astro.slots.render('default');
+
+interface Props {
+  initialDelay?: number;
+  delayInterval?: number;
+}
+
+const {
+  initialDelay = 0,
+  delayInterval = 150,
+} = Astro.props;
+
+---
+
+<div data-reveal-stagger class:list={Astro.props.class} style={`--stagger-initial: ${initialDelay}ms; --stagger-step: ${delayInterval}ms;`}>
+    <Fragment set:html={renderedContent}/>
+</div>

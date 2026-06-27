@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;400;600;700&family=Roboto:wght@400;700&display=swap");
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "tailwindcss-animated";
 
 @theme {
     --font-heading: "Roboto", sans-serif;
@@ -50,4 +52,62 @@
 
 @utility opacity-overlay {
     opacity: var(--opacity-overlay);
+}
+
+/* Scroll reveal ------------------------------------------------------------
+   Global "animate on scroll" system. Any element with `data-reveal` (or the
+   direct children of a `data-reveal-stagger` container) carries a
+   tailwindcss-animated `animate-*` utility; its animation is held paused until
+   the element scrolls into view, when the IntersectionObserver in Layout.astro
+   adds `.in-view`. The `reveal-enabled` gate is set by an inline script in the
+   <head>, so without JS (or with reduced motion) content stays fully visible. */
+@media (prefers-reduced-motion: no-preference) {
+    .reveal-enabled [data-reveal],
+    .reveal-enabled [data-reveal-stagger] > * {
+        animation-play-state: paused;
+    }
+
+    .reveal-enabled [data-reveal].in-view,
+    .reveal-enabled [data-reveal-stagger].in-view > * {
+        animation-play-state: running;
+    }
+
+     /* Sequential stagger: each child's animation starts after the previous one.
+       The offset/step come from the RevealStagger component props (set as the
+       --stagger-initial / --stagger-step inline custom properties; the values
+       below are the fallbacks). nth-child supplies the per-item multiplier, so
+       children need no per-card delay classes. Covers up to 12 items. */
+    
+    @supports not (animation-delay: calc(sibling-index() * 100ms)) {
+    
+        .reveal-enabled [data-reveal-stagger] > * {
+            animation-delay: var(--stagger-initial, 0ms);
+            animation-delay: calc(var(--stagger-initial, 0ms) + (sibling-index() - 1) * var(--stagger-step, 150ms));
+        }
+
+        .reveal-enabled [data-reveal-stagger] > *:nth-child(2) { animation-delay: calc(var(--stagger-initial, 0ms) + 1 * var(--stagger-step, 150ms)); }
+        .reveal-enabled [data-reveal-stagger] > *:nth-child(3) { animation-delay: calc(var(--stagger-initial, 0ms) + 2 * var(--stagger-step, 150ms)); }
+        .reveal-enabled [data-reveal-stagger] > *:nth-child(4) { animation-delay: calc(var(--stagger-initial, 0ms) + 3 * var(--stagger-step, 150ms)); }
+        .reveal-enabled [data-reveal-stagger] > *:nth-child(5) { animation-delay: calc(var(--stagger-initial, 0ms) + 4 * var(--stagger-step, 150ms)); }
+        .reveal-enabled [data-reveal-stagger] > *:nth-child(6) { animation-delay: calc(var(--stagger-initial, 0ms) + 5 * var(--stagger-step, 150ms)); }
+        .reveal-enabled [data-reveal-stagger] > *:nth-child(7) { animation-delay: calc(var(--stagger-initial, 0ms) + 6 * var(--stagger-step, 150ms)); }
+        .reveal-enabled [data-reveal-stagger] > *:nth-child(8) { animation-delay: calc(var(--stagger-initial, 0ms) + 7 * var(--stagger-step, 150ms)); }
+        .reveal-enabled [data-reveal-stagger] > *:nth-child(9) { animation-delay: calc(var(--stagger-initial, 0ms) + 8 * var(--stagger-step, 150ms)); }
+        .reveal-enabled [data-reveal-stagger] > *:nth-child(10) { animation-delay: calc(var(--stagger-initial, 0ms) + 9 * var(--stagger-step, 150ms)); }
+        .reveal-enabled [data-reveal-stagger] > *:nth-child(11) { animation-delay: calc(var(--stagger-initial, 0ms) + 10 * var(--stagger-step, 150ms)); }
+        .reveal-enabled [data-reveal-stagger] > *:nth-child(12) { animation-delay: calc(var(--stagger-initial, 0ms) + 11 * var(--stagger-step, 150ms)); }
+    }
+
+    @supports (animation-delay: calc(sibling-index() * 100ms)) {
+        .reveal-enabled [data-reveal-stagger] > * {
+            animation-delay: calc(var(--stagger-initial, 0ms) + (sibling-index() - 1) * var(--stagger-step, 150ms));
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-reveal],
+    [data-reveal-stagger] > * {
+        animation: none !important;
+    }
 }
