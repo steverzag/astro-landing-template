@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Navbar from "../sections/Navbar.astro";
 import Footer from "../sections/Footer.astro";
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
 	title?: string;
@@ -22,6 +23,7 @@ const { title = "Landing Page" } = Astro.props;
 		<script is:inline>
 			document.documentElement.classList.add("reveal-enabled");
 		</script>
+		<ClientRouter />
 	</head>
 	<body class="flex min-h-full flex-col bg-background font-body text-primary">
 		<Navbar />

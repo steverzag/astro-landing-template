@@ -1,0 +1,15 @@
+---
+// Service detail body — renders the markdown content with prose styling.
+// The slotted content is the rendered <Content /> from the services collection.
+import Reveal from "@components/Reveal.astro";
+---
+
+<section class="bg-background">
+    <div class="pb-20 md:pb-28">
+        <Reveal class="animate-fade-up animate-duration-700">
+            <div class="prose max-w-none font-body prose-headings:font-heading">
+                <slot />
+            </div>
+        </Reveal>
+    </div>
+</section>

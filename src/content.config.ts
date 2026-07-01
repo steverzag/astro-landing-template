@@ -12,4 +12,18 @@ const legal = defineCollection({
     }),
 });
 
-export const collections = { legal };
+// Services. Each .md file under src/content/services/ becomes both a card in the
+// Services section and its own detail page at /services/<filename>. The frontmatter
+// feeds the card; the markdown body is the detail page content.
+const services = defineCollection({
+    loader: glob({ pattern: "*.md", base: "./src/content/services" }),
+    schema: z.object({
+        title: z.string(),
+        // Short blurb shown on the card and used as the page summary.
+        description: z.string(),
+        // Controls card/listing order (lower comes first). Defaults to 0.
+        order: z.number().default(0),
+    }),
+});
+
+export const collections = { legal, services };

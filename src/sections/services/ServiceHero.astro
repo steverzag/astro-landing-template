@@ -1,0 +1,36 @@
+---
+// Service detail hero — the page title, summary, and a link back to the
+// services listing. Mirrors the landing sections' structure (one constrained
+// child band) so the back-link and heading share the page gutter.
+import Reveal from "@components/Reveal.astro";
+
+interface Props {
+    title: string;
+    description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<section class="scroll-mt-20 bg-background">
+    <div class="pt-12 pb-8 md:pt-16">
+        <a
+            href="/#services"
+            class="font-body text-sm text-secondary transition-opacity hover:opacity-muted"
+        >
+            &larr; All services
+        </a>
+        <Reveal class="mt-8 animate-fade-up animate-duration-700">
+            <h1 class="font-heading text-4xl font-bold text-primary md:text-5xl">
+                {title}
+            </h1>
+            {
+                description && (
+                    <p class="mt-4 max-w-2xl font-body text-lg text-secondary">
+                        {description}
+                    </p>
+                )
+            }
+        </Reveal>
+    </div>
+</section>
