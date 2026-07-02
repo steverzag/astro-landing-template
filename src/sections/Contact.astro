@@ -2,6 +2,7 @@
 // Contact section — a simple lead-capture form.
 // Wire `action` to your form handler / endpoint when ready.
 import Reveal from "@components/Reveal.astro";
+import ContactUsForm from "@components/Forms/ContactUsForm.astro";
 const heading = "Get in Touch";
 const subheading = "Tell us about your project and we'll get back to you shortly.";
 ---
@@ -16,46 +17,7 @@ const subheading = "Tell us about your project and we'll get back to you shortly
             <p class="mt-4 font-body text-base text-secondary">{subheading}</p>
         </div>
 
-        <form action="#" method="post" class="mt-10 space-y-6">
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                <div>
-                    <label for="name" class="block font-body text-sm text-primary">Name</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        required
-                        class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary outline-none focus:border-primary"
-                    />
-                </div>
-                <div>
-                    <label for="email" class="block font-body text-sm text-primary">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        required
-                        class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary outline-none focus:border-primary"
-                    />
-                </div>
-            </div>
-            <div>
-                <label for="message" class="block font-body text-sm text-primary">Message</label>
-                <textarea
-                    id="message"
-                    name="message"
-                    rows="5"
-                    required
-                    class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary outline-none focus:border-primary"
-                ></textarea>
-            </div>
-            <button
-                type="submit"
-                class="w-full rounded-md bg-primary px-6 py-3 font-body text-sm text-background shadow-md transition-opacity hover:opacity-muted"
-            >
-                Send Message
-            </button>
-        </form>
+        <ContactUsForm />
         </Reveal>
     </div>
 </section>

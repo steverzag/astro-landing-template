@@ -1,0 +1,97 @@
+---
+import FormState from "./FormState.astro";
+
+const successMessage = "Thanks for contacting us. We'll be in touch shortly";
+const errorMessage = "Something was wrong with your message. Please retry it";
+
+// Unique per render so a page can host multiple copies of this form (e.g. the
+// navbar modal and the contact section) without clashing label/input IDs.
+const uid = crypto.randomUUID();
+---
+
+<form data-contact-form novalidate class="relative space-y-6">
+  <FormState successMessage={successMessage} errorMessage={errorMessage} />
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <div>
+      <label for={`${uid}-name`} class="block font-body text-sm text-primary"
+        >Name</label
+      >
+      <input
+        type="text"
+        id={`${uid}-name`}
+        name="name"
+        data-required
+        class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary outline-none focus:border-primary"
+      />
+    </div>
+    <div>
+      <label for={`${uid}-email`} class="block font-body text-sm text-primary"
+        >Email</label
+      >
+      <input
+        type="email"
+        id={`${uid}-email`}
+        name="email"
+        data-required
+        data-validate
+        class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary outline-none focus:border-primary"
+      />
+    </div>
+    <div>
+      <label for={`${uid}-phone`} class="block font-body text-sm text-primary"
+        >Phone</label
+      >
+      <input
+        type="tel"
+        id={`${uid}-phone`}
+        name="phone"
+        data-required
+        data-validate
+        class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary outline-none focus:border-primary"
+      />
+    </div>
+  </div>
+  <div>
+    <label for={`${uid}-message`} class="block font-body text-sm text-primary"
+      >Message</label
+    >
+    <textarea
+      id={`${uid}-message`}
+      name="message"
+      rows="5"
+      data-required
+      class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary outline-none focus:border-primary"
+    ></textarea>
+  </div>
+  <button
+    type="submit"
+    class="w-full rounded-md bg-primary px-6 py-3 font-body text-sm text-background shadow-md transition-opacity hover:opacity-muted"
+  >
+    Send Message
+  </button>
+</form>
+
+<script>
+  import { initForm } from "@utils/forms.ts";
+
+  // Astro bundles this script once, no matter how many times the component is
+  // rendered. So wire up every instance independently, scoping all lookups to
+  // its own <form> — never to a shared/global id.
+  document
+    .querySelectorAll<HTMLFormElement>("[data-contact-form]")
+    .forEach((form) => initForm(form, "contactus"));
+    
+</script>
+
+<style is:global>
+  /* Error spans are created in JS, so they can't carry Astro's scoped id —
+     the style must be global. Red isn't in the palette (--color-* is reset),
+     so use a literal token here. */
+  .input-error-message {
+    display: block;
+    margin-top: 0.25rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: #dc2626;
+  }
+</style>

@@ -1,0 +1,44 @@
+---
+interface Props {
+  successMessage: string;
+  errorMessage: string;
+}
+
+const { successMessage, errorMessage } = Astro.props;
+---
+
+<!--
+  Overlay panels that sit on top of the form. The parent <form> is `relative`,
+  so each panel fills it via `absolute inset-0`. The active panel is chosen by
+  the `state-*` class the form script toggles on this root element. No IDs are
+  used, so the form can be rendered more than once on the same page.
+-->
+<div class="form-state">
+  <div
+    class="form-state-loading absolute inset-0 z-50 hidden flex-col items-center justify-center gap-3 rounded-md bg-background opacity-overlay animate-fade animate-duration-200"
+  >
+    <span class="font-body text-sm text-secondary">Submitting…</span>
+  </div>
+  <div
+    class="form-state-success absolute inset-0 z-50 hidden flex-col items-center justify-center gap-3 rounded-md bg-background animate-fade animate-duration-200"
+  >
+    <span class="text-balance px-6 text-center font-body text-primary">
+      {successMessage}
+    </span>
+  </div>
+  <div
+    class="form-state-error absolute inset-0 z-50 hidden flex-col items-center justify-center gap-3 rounded-md bg-background animate-fade animate-duration-200"
+  >
+    <span class="text-balance px-6 text-center font-body text-primary">
+      {errorMessage}
+    </span>
+  </div>
+</div>
+
+<style>
+  .form-state.state-loading .form-state-loading,
+  .form-state.state-success .form-state-success,
+  .form-state.state-error .form-state-error {
+    display: flex;
+  }
+</style>
