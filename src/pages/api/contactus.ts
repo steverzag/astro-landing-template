@@ -44,9 +44,8 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ error: "Validation failed", errors }, 400);
   }
 
-  // TODO: send the notification email. `src/utils/emailService.ts` has a
-  // Resend-based `sendEmail` ready to wire up once `resend` is installed and
-  // RESEND_API_KEY / SENDER_EMAIL are added to the astro:env schema.
+  // TODO: send the notification email — e.g. install `resend`, add
+  // RESEND_API_KEY / SENDER_EMAIL to the astro:env schema, and call it here.
   console.log("[contactus] new submission", { name, email, phone, message });
 
   return json({ success: true }, 200);
