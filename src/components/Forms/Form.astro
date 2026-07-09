@@ -1,0 +1,21 @@
+---
+import FormState from "./FormState.astro";
+
+interface Props extends astroHTML.JSX.FormHTMLAttributes {
+  successMessage: string;
+  errorMessage: string;
+}
+
+const { successMessage, errorMessage, class: className, ...attrs } = Astro.props;
+---
+
+<!--
+  Base form wrapper: every form in the project renders through this so the
+  FormState overlay (and the `novalidate` convention — validation lives in
+  `initForm`) comes for free. `relative` is baked in because FormState's
+  panels position against the <form> via `absolute inset-0`.
+-->
+<form novalidate class:list={["relative", className]} {...attrs}>
+  <FormState successMessage={successMessage} errorMessage={errorMessage} />
+  <slot />
+</form>

@@ -1,5 +1,5 @@
 ---
-import FormState from "./FormState.astro";
+import Form from "./Form.astro";
 
 const successMessage = "Thanks for contacting us. We'll be in touch shortly";
 const errorMessage = "Something was wrong with your message. Please retry it";
@@ -9,8 +9,7 @@ const errorMessage = "Something was wrong with your message. Please retry it";
 const uid = crypto.randomUUID();
 ---
 
-<form data-contact-form novalidate class="relative space-y-6">
-  <FormState successMessage={successMessage} errorMessage={errorMessage} />
+<Form data-contact-form successMessage={successMessage} errorMessage={errorMessage} class="space-y-6">
   <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
     <div>
       <label for={`${uid}-name`} class="block font-body text-sm text-primary"
@@ -69,7 +68,7 @@ const uid = crypto.randomUUID();
   >
     Send Message
   </button>
-</form>
+</Form>
 
 <script>
   import { initForm } from "@utils/forms.ts";

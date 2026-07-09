@@ -8,8 +8,10 @@ const { successMessage, errorMessage } = Astro.props;
 ---
 
 <!--
-  Overlay panels that sit on top of the form. The parent <form> is `relative`,
-  so each panel fills it via `absolute inset-0`. The active panel is chosen by
+  Overlay panels that sit on top of the form. The parent form element
+  (rendered by Form.astro, which bakes in `relative`) is the positioning
+  context, so each panel fills it via `absolute inset-0`. The active panel is
+  chosen by
   the `state-*` class the form script toggles on this root element. No IDs are
   used, so the form can be rendered more than once on the same page.
 

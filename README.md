@@ -24,7 +24,7 @@ pnpm preview    # preview the production build
 ```text
 src/
 ├── components/          # Reusable UI pieces (Modal, Reveal, RevealStagger)
-│   └── Forms/           # ContactUsForm + FormState (loading/success/error UI)
+│   └── Forms/           # Form (base wrapper) + FormState + ContactUsForm
 ├── content/
 │   ├── legal/           # Markdown legal pages (privacy, terms, cookies)
 │   └── services/        # One .md per service — card + detail page
@@ -73,7 +73,22 @@ Wrap content in `<Reveal>` or `<RevealStagger>` (or add `data-reveal` plus a `ta
 
 ### Forms
 
-`src/utils/forms.ts` provides `initForm(form, endpointPath)`, a declarative client-side validation system: mark inputs with `data-required` and/or `data-validate` and the rules in `fieldValidations` (keyed by input `name`) are applied on submit. Forms use `novalidate` so these rules replace the browser's native validation. Submissions POST as JSON to `/api/<endpointPath>`, and `FormState` renders the loading/success/error overlay.
+Every form is built from `<Form>` (`src/components/Forms/Form.astro`), the base wrapper that renders the actual `<form>` element and bakes in the project conventions: the `FormState` loading/success/error overlay (plus the `relative` positioning it needs) and `novalidate`. To create a new form, put your fields in a `<Form>` with `successMessage`/`errorMessage` props and a marker attribute, then wire it up in a script — any extra attributes are forwarded to the `<form>` element:
+
+```astro
+<Form data-my-form successMessage="…" errorMessage="…" class="space-y-6">
+  <!-- fields + submit button -->
+</Form>
+
+<script>
+  import { initForm } from "@utils/forms.ts";
+  document
+    .querySelectorAll<HTMLFormElement>("[data-my-form]")
+    .forEach((form) => initForm(form, "myendpoint"));
+</script>
+```
+
+`src/utils/forms.ts` provides `initForm(form, endpointPath)`, a declarative client-side validation system: mark inputs with `data-required` and/or `data-validate` and the rules in `fieldValidations` (keyed by input `name`) are applied on submit. Because forms are `novalidate`, these rules replace the browser's native validation. Submissions POST as JSON to `/api/<endpointPath>`, and `FormState` renders the loading/success/error overlay. See `ContactUsForm.astro` for the full pattern, including per-render unique input IDs.
 
 The API route (`src/pages/api/contactus.ts`) mirrors the validation server-side and currently just logs submissions — wire it to an email provider (e.g. Resend) to go live.
 
