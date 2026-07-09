@@ -40,6 +40,18 @@
     --opacity-muted: 0.6;
     --opacity-disabled: 0.4;
     --opacity-overlay: 0.8;
+
+    /* Motion — one duration scale for every transition/animation.
+       Generates `duration-fast|medium|slow` utilities (transition-duration);
+       animations use the same tokens via
+       `animate-duration-(--transition-duration-*)`, component CSS via
+       `var(--transition-duration-*)`. `--default-transition-duration` is what
+       bare `transition-*` utilities (hover micro-interactions) fall back to. */
+    --default-transition-duration: 150ms;
+
+    --transition-duration-fast: 200ms;
+    --transition-duration-medium: 300ms;
+    --transition-duration-slow: 700ms;
 }
 
 @utility opacity-muted {
@@ -52,6 +64,14 @@
 
 @utility opacity-overlay {
     opacity: var(--opacity-overlay);
+}
+
+/* Teach tailwindcss-animated's animate-duration-* to resolve the duration
+   tokens, so `animate-duration-fast|medium|slow` work like `duration-*` does.
+   The plugin's own integer form (`animate-duration-200`) still matches via
+   its original definition. */
+@utility animate-duration-* {
+    animation-duration: --value(--transition-duration-*);
 }
 
 /* Scroll reveal ------------------------------------------------------------

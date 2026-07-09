@@ -52,6 +52,12 @@ export const initForm = (form: HTMLFormElement, endpointPath: string) => {
     );
 
   // When hosted inside a <Modal />, reset fields and state after it closes.
+  // The delay is read from the dialog's own close transition (which uses the
+  // --transition-duration-* tokens), plus a small buffer, so the reset never
+  // flashes mid-fade even if the tokens change.
+  const dialogCloseMs = dialog
+    ? (parseFloat(getComputedStyle(dialog).transitionDuration) || 0.3) * 1000
+    : 0;
   dialog?.addEventListener("close", () => {
     setTimeout(() => {
       inputs.forEach((input) => {
@@ -59,7 +65,7 @@ export const initForm = (form: HTMLFormElement, endpointPath: string) => {
         removeError(input);
       });
       clearState();
-    }, 300);
+    }, dialogCloseMs + 50);
   });
 
   // Clear a field's error as soon as the user refocuses it.
@@ -95,10 +101,6 @@ export const initForm = (form: HTMLFormElement, endpointPath: string) => {
         fail(name, fieldValidations[name as keyof typeof fieldValidations]?.validationErrorMessage || `${name} must be valid`);
       }
     }
-
-    //   if (!values.name) fail("name", "Please insert your Name");
-    //   if (!validateEmail(values.email)) fail("email", "Email must be valid");
-    //   if (!validatePhone(values.phone)) fail("phone", "Phone Number must be valid");
 
     if (hasError) return;
 

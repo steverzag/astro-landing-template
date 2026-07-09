@@ -51,6 +51,7 @@ All theming lives in the `@theme` block of `src/styles/global.css`. The color, s
 - Colors: `primary`, `secondary`, `tertiary`, `background`
 - Shadows / blurs / radii: `sm`, `md`, `lg`
 - Opacity utilities: `opacity-muted`, `opacity-disabled`, `opacity-overlay`
+- Durations: `fast` (200ms), `medium` (300ms), `slow` (700ms) — `duration-*` utilities for transitions, `animate-duration-*` for animations (an `@utility` override lets the animate plugin resolve the same tokens), `var(--transition-duration-*)` in component CSS. Hover micro-interactions use `--default-transition-duration` (150ms). Don't hardcode times; use the tokens so motion speed can be retuned in one place.
 - Fonts: `font-heading` (Roboto), `font-body` (Nunito Sans)
 
 To rebrand a new project, change the token values in `global.css` — arbitrary colors like `text-red-500` intentionally don't exist.

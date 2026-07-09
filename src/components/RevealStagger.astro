@@ -5,6 +5,7 @@ const renderedContent = await Astro.slots.render('default');
 interface Props {
   initialDelay?: number;
   delayInterval?: number;
+  class?: string;
 }
 
 const {

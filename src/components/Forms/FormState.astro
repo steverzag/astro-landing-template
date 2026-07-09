@@ -12,22 +12,27 @@ const { successMessage, errorMessage } = Astro.props;
   so each panel fills it via `absolute inset-0`. The active panel is chosen by
   the `state-*` class the form script toggles on this root element. No IDs are
   used, so the form can be rendered more than once on the same page.
+
+  The loading panel is translucent via background alpha (`bg-background/80`,
+  the `--opacity-overlay` token), not an `opacity-*` utility: element opacity
+  would dim the panel's children (message, a future spinner) and be overridden
+  by `animate-fade`'s final keyframe anyway.
 -->
 <div class="form-state">
   <div
-    class="form-state-loading absolute inset-0 z-50 hidden flex-col items-center justify-center gap-3 rounded-md bg-background opacity-overlay animate-fade animate-duration-200"
+    class="form-state-loading absolute inset-0 z-50 hidden flex-col items-center justify-center gap-3 rounded-md bg-background/80 animate-fade animate-duration-fast"
   >
     <span class="font-body text-sm text-secondary">Submitting…</span>
   </div>
   <div
-    class="form-state-success absolute inset-0 z-50 hidden flex-col items-center justify-center gap-3 rounded-md bg-background animate-fade animate-duration-200"
+    class="form-state-success absolute inset-0 z-50 hidden flex-col items-center justify-center gap-3 rounded-md bg-background animate-fade animate-duration-fast"
   >
     <span class="text-balance px-6 text-center font-body text-primary">
       {successMessage}
     </span>
   </div>
   <div
-    class="form-state-error absolute inset-0 z-50 hidden flex-col items-center justify-center gap-3 rounded-md bg-background animate-fade animate-duration-200"
+    class="form-state-error absolute inset-0 z-50 hidden flex-col items-center justify-center gap-3 rounded-md bg-background animate-fade animate-duration-fast"
   >
     <span class="text-balance px-6 text-center font-body text-primary">
       {errorMessage}
@@ -40,5 +45,18 @@ const { successMessage, errorMessage } = Astro.props;
   .form-state.state-success .form-state-success,
   .form-state.state-error .form-state-error {
     display: flex;
+  }
+
+  /* The panels only cover the form's box (`inset-0`), but shadows on the
+     form's children (e.g. the submit button's `shadow-md`) paint outside it
+     and would peek around the opaque success/error panels. Hiding the
+     content also hides its shadows; the delay matches the panel's fade-in
+     duration so the form doesn't blink out before the panel covers it.
+     (`:global` because the siblings belong to the parent form's scope.)
+     The loading panel is intentionally see-through, so it doesn't hide. */
+  .form-state.state-success ~ :global(*),
+  .form-state.state-error ~ :global(*) {
+    visibility: hidden;
+    transition: visibility 0s var(--transition-duration-fast);
   }
 </style>
