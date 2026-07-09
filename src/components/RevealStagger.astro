@@ -11,10 +11,11 @@ interface Props {
 const {
   initialDelay = 0,
   delayInterval = 150,
+  class: className,
 } = Astro.props;
 
 ---
 
-<div data-reveal-stagger class:list={Astro.props.class} style={`--stagger-initial: ${initialDelay}ms; --stagger-step: ${delayInterval}ms;`}>
+<div data-reveal-stagger class:list={className} style={`--stagger-initial: ${initialDelay}ms; --stagger-step: ${delayInterval}ms;`}>
     <Fragment set:html={renderedContent}/>
 </div>
