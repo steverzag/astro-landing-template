@@ -26,7 +26,7 @@ const services = (await getCollection("services")).sort(
                 services.map((service) => (
                     <a
                         href={`/services/${service.id}`}
-                        class="group animate-fade-up rounded-lg border border-tertiary p-8 shadow-sm transition-shadow hover:shadow-md"
+                        class="group animate-fade-up rounded-lg border border-tertiary p-8 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     >
                         <h3 class="font-heading text-xl font-bold text-primary">
                             {service.data.title}
@@ -34,8 +34,12 @@ const services = (await getCollection("services")).sort(
                         <p class="mt-3 font-body text-sm text-secondary">
                             {service.data.description}
                         </p>
-                        <span class="mt-4 inline-block font-body text-sm font-bold text-primary transition-opacity group-hover:opacity-muted">
-                            Learn more &rarr;
+                        <span class="mt-4 inline-block font-body text-sm font-bold text-primary">
+                            Learn more <span
+                                aria-hidden="true"
+                                class="inline-block transition-transform group-hover:translate-x-0.5"
+                                >&rarr;</span
+                            >
                         </span>
                     </a>
                 ))

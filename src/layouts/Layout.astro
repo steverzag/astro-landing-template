@@ -13,12 +13,18 @@ const { title = "Landing Page" } = Astro.props;
 
 
 <!doctype html>
-<html lang="en" class="sm:scroll-smooth">
+<html lang="en" class="motion-safe:sm:scroll-smooth">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;400;600;700&family=Roboto:wght@400;700&display=swap"
+		/>
 		<title>{title}</title>
 		<script is:inline>
 			document.documentElement.classList.add("reveal-enabled");
@@ -38,24 +44,31 @@ const { title = "Landing Page" } = Astro.props;
 	// Global scroll-reveal: reveal any [data-reveal] / [data-reveal-stagger]
 	// element once it enters the viewport. Works on every page that uses this
 	// layout — new sections only need a `data-reveal` attribute.
-	const reveal = (el: Element) => el.classList.add("in-view");
-	const targets = document.querySelectorAll("[data-reveal], [data-reveal-stagger]");
+	//
+	// Wired on `astro:page-load` (fires on first load AND after every
+	// ClientRouter navigation): bundled scripts run only once, so top-level
+	// wiring would leave every swapped-in page's reveals permanently paused
+	// at their first (invisible) keyframe.
+	document.addEventListener("astro:page-load", () => {
+		const reveal = (el: Element) => el.classList.add("in-view");
+		const targets = document.querySelectorAll("[data-reveal], [data-reveal-stagger]");
 
-	if (!("IntersectionObserver" in window)) {
-		targets.forEach(reveal);
-	} else {
-		const observer = new IntersectionObserver(
-			(entries, obs) => {
-				for (const entry of entries) {
-					if (!entry.isIntersecting) continue;
-					reveal(entry.target);
-					obs.unobserve(entry.target);
-				}
-			},
-			{ rootMargin: "0px 0px -10% 0px", threshold: 0.15 },
-		);
-		targets.forEach((el) => observer.observe(el));
-	}
+		if (!("IntersectionObserver" in window)) {
+			targets.forEach(reveal);
+		} else {
+			const observer = new IntersectionObserver(
+				(entries, obs) => {
+					for (const entry of entries) {
+						if (!entry.isIntersecting) continue;
+						reveal(entry.target);
+						obs.unobserve(entry.target);
+					}
+				},
+				{ rootMargin: "0px 0px -10% 0px", threshold: 0.15 },
+			);
+			targets.forEach((el) => observer.observe(el));
+		}
+	});
 </script>
 
 <style is:global>

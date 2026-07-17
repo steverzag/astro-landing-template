@@ -19,8 +19,9 @@ const uid = crypto.randomUUID();
         type="text"
         id={`${uid}-name`}
         name="name"
+        autocomplete="name"
         data-required
-        class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary outline-none focus:border-primary"
+        class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary transition-colors focus:border-primary"
       />
     </div>
     <div>
@@ -31,9 +32,10 @@ const uid = crypto.randomUUID();
         type="email"
         id={`${uid}-email`}
         name="email"
+        autocomplete="email"
         data-required
         data-validate
-        class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary outline-none focus:border-primary"
+        class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary transition-colors focus:border-primary"
       />
     </div>
     <div>
@@ -44,9 +46,10 @@ const uid = crypto.randomUUID();
         type="tel"
         id={`${uid}-phone`}
         name="phone"
+        autocomplete="tel"
         data-required
         data-validate
-        class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary outline-none focus:border-primary"
+        class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary transition-colors focus:border-primary"
       />
     </div>
   </div>
@@ -59,12 +62,12 @@ const uid = crypto.randomUUID();
       name="message"
       rows="5"
       data-required
-      class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary outline-none focus:border-primary"
+      class="mt-2 w-full rounded-md border border-tertiary px-4 py-2 font-body text-sm text-primary transition-colors focus:border-primary"
     ></textarea>
   </div>
   <button
     type="submit"
-    class="w-full rounded-md bg-primary px-6 py-3 font-body text-sm text-background shadow-md transition-opacity hover:opacity-muted"
+    class="w-full rounded-md bg-primary px-6 py-3 font-body text-sm text-background shadow-md transition hover:bg-primary/85 active:scale-[0.98]"
   >
     Send Message
   </button>
@@ -75,11 +78,15 @@ const uid = crypto.randomUUID();
 
   // Astro bundles this script once, no matter how many times the component is
   // rendered. So wire up every instance independently, scoping all lookups to
-  // its own <form> — never to a shared/global id.
-  document
-    .querySelectorAll<HTMLFormElement>("[data-contact-form]")
-    .forEach((form) => initForm(form, "contactus"));
-    
+  // its own <form> — never to a shared/global id. Runs on astro:page-load
+  // (first load and after every ClientRouter navigation) because the bundled
+  // script itself only executes once, while the forms are replaced on each
+  // page swap.
+  document.addEventListener("astro:page-load", () => {
+    document
+      .querySelectorAll<HTMLFormElement>("[data-contact-form]")
+      .forEach((form) => initForm(form, "contactus"));
+  });
 </script>
 
 <style is:global>

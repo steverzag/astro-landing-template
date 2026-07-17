@@ -45,7 +45,7 @@ const brand = "Brand";
     >
       <span
         slot="open-button-content"
-        class="hidden rounded-md bg-primary px-4 py-2 font-body text-sm text-background shadow-sm transition-opacity hover:opacity-muted md:inline-block"
+        class="hidden rounded-md bg-primary px-4 py-2 font-body text-sm text-background shadow-sm transition hover:bg-primary/85 active:scale-[0.98] md:inline-block"
       >
         Get Started
       </span>
@@ -54,14 +54,16 @@ const brand = "Brand";
       </div>
     </Modal>
 
-    <!-- Mobile menu toggle -->
+    <!-- Mobile menu toggle. Padding + negative margin grow the 24px icon to a
+         44px touch target without shifting the layout. The icon swaps to an X
+         while open, driven purely by aria-expanded (group-aria-expanded:). -->
     <button
       type="button"
       id="nav-toggle"
       aria-label="Toggle menu"
       aria-expanded="false"
       aria-controls="nav-mobile"
-      class="md:hidden"
+      class="group -m-2.5 p-2.5 md:hidden"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -69,12 +71,25 @@ const brand = "Brand";
         viewBox="0 0 24 24"
         stroke-width="1.5"
         stroke="currentColor"
-        class="size-6 text-primary"
+        class="size-6 text-primary group-aria-expanded:hidden"
       >
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
           d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+      </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="hidden size-6 text-primary group-aria-expanded:block"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18 18 6M6 6l12 12"></path>
       </svg>
     </button>
   </nav>
@@ -100,11 +115,60 @@ const brand = "Brand";
 </header>
 
 <script>
-  const toggle = document.getElementById("nav-toggle");
-  const menu = document.getElementById("nav-mobile");
+  // Wired on astro:page-load so the (freshly swapped-in) header keeps working
+  // after ClientRouter navigations — bundled scripts only execute once.
+  document.addEventListener("astro:page-load", () => {
+    const toggle = document.getElementById("nav-toggle");
+    const menu = document.getElementById("nav-mobile");
 
-  toggle?.addEventListener("click", () => {
-    const open = menu?.classList.toggle("hidden") === false;
-    toggle.setAttribute("aria-expanded", String(open));
+    const setOpen = (open: boolean) => {
+      menu?.classList.toggle("hidden", !open);
+      toggle?.setAttribute("aria-expanded", String(open));
+    };
+
+    toggle?.addEventListener("click", () =>
+      setOpen(menu?.classList.contains("hidden") ?? false),
+    );
+
+    // Tapping a link should dismiss the menu instead of leaving it open over
+    // the section it just scrolled to.
+    menu?.addEventListener("click", (event) => {
+      if (event.target instanceof Element && event.target.closest("a"))
+        setOpen(false);
+    });
   });
 </script>
+
+<style>
+  @reference "../styles/global.css";
+
+  /* Animate the mobile menu open/close. `display` rides along via
+     allow-discrete so the exit fade finishes before the element leaves the
+     layout; @starting-style provides the entry keyframe. The `hidden` utility
+     still owns the actual display value. */
+  #nav-mobile {
+    transition-property: display, opacity, translate;
+    transition-duration: var(--transition-duration-fast);
+    transition-timing-function: var(--ease-out);
+    transition-behavior: allow-discrete;
+  }
+
+  #nav-mobile.hidden {
+    opacity: 0;
+    translate: 0 -0.5rem;
+  }
+
+  @starting-style {
+    #nav-mobile:not(.hidden) {
+      opacity: 0;
+      translate: 0 -0.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #nav-mobile,
+    #nav-mobile.hidden {
+      translate: none;
+    }
+  }
+</style>

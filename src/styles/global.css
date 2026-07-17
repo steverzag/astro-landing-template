@@ -1,4 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;400;600;700&family=Roboto:wght@400;700&display=swap");
+/* Fonts are loaded via <link> tags in Layout.astro (preconnect + stylesheet)
+   instead of a CSS @import, which would chain a render-blocking request
+   behind this stylesheet. */
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @plugin "tailwindcss-animated";
@@ -11,7 +13,7 @@
     --color-*: initial;
 
     --color-primary: #000;
-    --color-secondary: #aaa;
+    --color-secondary: #595959;
     --color-tertiary: #ccc;
     --color-background: #ffffff;
 
@@ -52,6 +54,26 @@
     --transition-duration-fast: 200ms;
     --transition-duration-medium: 300ms;
     --transition-duration-slow: 700ms;
+
+    /* Easing — reset the namespace, expose only approved curves. The browser
+       built-ins are too weak for UI motion, and ease-in (starts slow) is
+       deliberately not offered: entrances/exits should lead with movement.
+       `--default-transition-timing-function` makes bare `transition-*`
+       utilities use the strong ease-out. */
+    --ease-*: initial;
+
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+    --default-transition-timing-function: var(--ease-out);
+}
+
+/* Keyboard focus must always be visible. Interactive elements rely on this
+   single ring instead of per-component focus styles; inputs additionally
+   darken their border via `focus:border-primary`. */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
 }
 
 @utility opacity-muted {
